@@ -5,25 +5,20 @@ import 'bitmovin-player/bitmovinplayer-ui.css';
 
 const BitPlayer = () => {
     const [player, setPlayer] = useState(null)
-    const playerConfig =  {
-        key: process.env.REACT_APP_KEY
-    };
-    const playerSource = {
-        dash: process.env.REACT_APP_VIDEO,
-        drm: {
-            widevine: {
-                LA_URL: process.env.REACT_APP_WIDEVINE
-            }
-
-        }
-    };
     const playerDiv = useRef()
-    useEffect(() => {
-        setupPlayer()
-        return () => destroyPlayer()
-    }, [])
-
     const setupPlayer = () => {
+        const playerConfig = {
+            key: process.env.REACT_APP_KEY
+        };
+        const playerSource = {
+            dash: process.env.REACT_APP_VIDEO,
+            drm: {
+                widevine: {
+                    LA_URL: process.env.REACT_APP_WIDEVINE
+                }
+
+            }
+        };
         const player = new Player(playerDiv.current, playerConfig);
         UIFactory.buildDefaultUI(player);
         player.load(playerSource).then(() => {
@@ -41,8 +36,14 @@ const BitPlayer = () => {
             console.log("destroyed")
         }
     }
+    useEffect(() => {
+        setupPlayer()
+        return () => destroyPlayer()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-        return <div id='player' ref={playerDiv} />;
+
+    return <div id='player' ref={playerDiv} />;
 }
 
 export default BitPlayer;
